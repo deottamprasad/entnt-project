@@ -285,3 +285,128 @@
     padding: 2rem;
   }
 }
+/* --- Job Header Dropdown --- */
+
+.filter-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-dropdown-menu {
+  position: absolute;
+  top: 110%; /* Position it just below the button */
+  left: 0;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 8px 0;
+  margin: 0;
+  list-style: none;
+  z-index: 10;
+  min-width: 150px; /* Give it some width */
+}
+
+.filter-dropdown-menu li {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-dropdown-menu li:hover {
+  background-color: #f1f5f9;
+}
+
+.drag-handle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: #9ca3af; /* Light gray, adjust as needed */
+  margin-right: 8px; /* Space between handle and title */
+}
+
+.drag-handle-btn:focus-visible {
+  outline: 2px solid blue; /* Accessibility focus ring */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.drag-handle-btn:hover {
+  color: #111827; /* Darker gray on hover */
+}
+
+/* --- Dragging State --- */
+.job-card.dragging {
+  opacity: 0.8;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  z-index: 100;
+  cursor: grabbing;
+}
+
+.job-card-drag-handle {
+  width: 20px; /* Slightly smaller */
+  height: 20px;
+}
+
+.pagination-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb; /* Light gray border */
+  margin-top: 16px;
+  background-color: #ffffff; /* White background */
+  border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+}
+
+.pagination-info {
+  font-size: 0.875rem; /* 14px */
+  color: #4b5563; /* Gray */
+}
+
+.pagination-info strong {
+  color: #111827; /* Darker gray */
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  color: #374151; /* Medium gray */
+  background-color: #ffffff;
+  border: 1px solid #d1d5db; /* Gray border */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #f9fafb; /* Very light gray hover */
+}
+
+.pagination-btn:disabled {
+  color: #9ca3af; /* Lighter gray for disabled */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.pagination-btn svg {
+  width: 16px;
+  height: 16px;
+}

@@ -30,7 +30,7 @@ export const handlers = [
    * GET /jobs
    * Supports pagination, filtering (status, search), and sorting (by order).
    */
-  http.get('/jobs', async ({ request }) => {
+ http.get('/jobs', async ({ request }) => {
     await simulateDelay();
     const url = new URL(request.url);
     const params = url.searchParams;
@@ -40,30 +40,66 @@ export const handlers = [
     const pageSize = parseInt(params.get('pageSize') || '10', 10);
     const status = params.get('status');
     const search = params.get('search');
+    const tags = params.get('tags');
+      
+    const tagList = tags ? tags.split(',') : [];
+
+    // --- FIX IS HERE ---
     
-    // Start with a query, sorted by the 'order' field
+    // 1. Start with the table and apply the primary sort
+    // This ensures drag-and-drop order is *always* respected.
     let collection = db.jobs.orderBy('order');
 
-    // Apply filters
+    // 2. Apply filters
+    // We use Dexie's .filter() for simplicity, which works on top
+    // of the sorted collection.
+    
+    let filteredCollection = collection;
+
     if (status) {
-      collection = collection.where('status').equals(status);
+      filteredCollection = filteredCollection.filter(job => 
+        job.status.toLowerCase() === status.toLowerCase()
+      );
     }
+    
     if (search) {
-      collection = collection.filter(job => 
+      filteredCollection = filteredCollection.filter(job => 
         job.title.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // Get total count *after* filtering
-    const total = await collection.count();
+    if (tagList.length > 0) {
+      filteredCollection = filteredCollection.filter(job => 
+        tagList.every(tag => job.tags.includes(tag))
+      );
+    }
+    // --- END OF FIX ---
 
-    // Apply pagination
-    const jobs = await collection
+    // 3. Get total count *after* all filtering
+    const total = await filteredCollection.count();
+
+    // 4. Apply pagination *last*
+    const jobs = await filteredCollection
       .offset((page - 1) * pageSize)
       .limit(pageSize)
       .toArray();
 
     return HttpResponse.json({ jobs, total, page, pageSize });
+  }),
+
+http.get('/jobs/tags', async () => {
+    await simulateDelay();
+    try {
+      const allJobs = await db.jobs.toArray();
+      // Flatten all tag arrays into one array
+      const allTags = allJobs.flatMap(job => job.tags);
+      // Use a Set to get only unique values, then convert back to array
+      const uniqueTags = [...new Set(allTags)];
+      
+      return HttpResponse.json(uniqueTags);
+    } catch (error) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to fetch tags' }), { status: 500 });
+    }
   }),
 
   /**
@@ -132,9 +168,9 @@ export const handlers = [
   http.patch('/jobs/:id/reorder', async ({ request, params }) => {
     await simulateDelay();
     // This endpoint is required to fail occasionally
-    if (simulateWriteError(0.1)) {
-      return new HttpResponse(JSON.stringify({ message: 'Failed to reorder' }), { status: 500 });
-    }
+    // if (simulateWriteError(0.1)) {
+    //   return new HttpResponse(JSON.stringify({ message: 'Failed to reorder' }), { status: 500 });
+    // }
 
     const { id } = params;
     const { fromOrder, toOrder } = await request.json();

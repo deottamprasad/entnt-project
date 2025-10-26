@@ -4,6 +4,8 @@
  * to interact with the (mock) backend.
  */
 
+import { db } from "./db";
+
 /**
  * A helper to handle all fetch responses.
  * It checks for 'ok' status and throws an error if it's not.
@@ -26,10 +28,38 @@ export const api = {
      * GET /jobs
      * Fetches jobs with filters and pagination.
      */
-    async getAll({ page = 1, pageSize = 10, status = '', search = '', sort = 'order' }) {
+    async getAll({ page = 1, pageSize = 10, status = '', search = '', sort = 'order', tags = [] }={}) {
       const params = new URLSearchParams({ page, pageSize, status, search, sort });
+      
+      // --- ADDED: Handle tags array ---
+      if (tags && tags.length > 0) {
+        // Send as a comma-separated list, e.g., tags=react,node
+        params.append('tags', tags.join(','));
+      }
+      // --- End of change ---
+
       const response = await fetch(`/jobs?${params}`);
       return handleResponse(response);
+    },
+
+    getJobCount: async () => {
+      try {
+        const total = await db.jobs.count(); 
+        return total;  
+      } catch (err) {
+        console.error("Failed to get job count:", err);
+        throw err;
+      }
+    },
+
+    getUniqueTags: async () => {
+      try {
+        const response = await fetch('/jobs/tags');
+        return handleResponse(response);
+      } catch (err) {
+        console.error("Failed to get unique tags:", err);
+        throw err;
+      }
     },
 
     /**
@@ -75,6 +105,15 @@ export const api = {
   // === CANDIDATES (Phase 3) ===
   candidates: {
     // Placeholder for Phase 3
+    getCandidateCount: async () => {
+      try {
+        const total = await db.candidates.count(); 
+        return total;  
+      } catch (err) {
+        console.error("Failed to get job count:", err);
+        throw err;
+      }
+    },
   },
   
   // === ASSESSMENTS (Phase 3) ===
