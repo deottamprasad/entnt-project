@@ -1,11 +1,7 @@
-// src/components/JobCard.jsx
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-// --- DND Imports ---
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-// --- End DND Imports ---
 
 const DragHandleIcon = () => (
   <svg
@@ -26,16 +22,14 @@ const DragHandleIcon = () => (
   </svg>
 );
 
-// 1. Accept `onEdit` as a prop
 export default function JobCard({ job, onEdit }) {
-  // --- DND: Use the hook ---
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
-    isDragging, // Useful for styling the dragging item
+    isDragging, 
   } = useSortable({ id: job.id });
 
   // Style for the transform (moving) effect
@@ -43,16 +37,13 @@ export default function JobCard({ job, onEdit }) {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  // --- End DND setup ---
 
   const cardClasses = `job-card ${isDragging ? 'dragging' : ''}`;
 
   return (
-    // Apply setNodeRef, style, and className to the main wrapper
     <div ref={setNodeRef} style={style} className={cardClasses}>
       <div className="job-card-header">
         <div className="job-card-title-group">
-          {/* Apply listeners and attributes to the handle */}
           <button
             type="button"
             className="drag-handle-btn"
@@ -81,7 +72,6 @@ export default function JobCard({ job, onEdit }) {
         <Link to={`${job.id}`} className="job-action-btn">
           View
         </Link>
-        {/* 2. Add onClick handler to the Edit button */}
         <button type="button" className="job-action-btn" onClick={onEdit}>
           Edit
         </button>

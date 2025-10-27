@@ -4,6 +4,7 @@ import Candidates from './pages/Candidates';
 import Jobs from './pages/Jobs';
 import JobAssessment from './pages/Jobs/JobAssessment';
 import JobDetails from './pages/Jobs/JobDetails';
+import CandidateDetail from './pages/Candidates/CandidateDetail';
 // ...
 
 function App() {
@@ -14,7 +15,9 @@ function App() {
           <Route path="assessment" element={<JobAssessment />} />
         </Route>
       </Route>
-      <Route path="/mycandidate" element={<Candidates/>} />
+      <Route path="/mycandidate" element={<Candidates/>}>
+        <Route path=":id" element={<CandidateDetail/>}/>
+      </Route>
     </Routes>
   </BrowserRouter>
 }

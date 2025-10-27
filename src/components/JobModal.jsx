@@ -1,7 +1,5 @@
-// src/components/JobModal.jsx
-
 import React, { useState, useEffect } from 'react';
-import '../styles/modal.css'; // We will create this CSS file next
+import '../styles/modal.css'; 
 
 // Simple X icon for closing
 const XMarkIcon = () => (
@@ -23,7 +21,6 @@ const XMarkIcon = () => (
 );
 
 export default function JobModal({ isOpen, onClose, onSave, job }) {
-  // Form state
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState(''); // Storing tags as a comma-separated string

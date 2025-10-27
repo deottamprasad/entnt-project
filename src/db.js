@@ -4,7 +4,6 @@ import Dexie from 'dexie';
 export const db = new Dexie('TalentFlowDB');
 
 db.version(1).stores({
-  // All on one line, no newlines
   jobs: 'id, title, slug, status, order, *tags',
   candidates: 'id, name, email, stage, jobId',
   candidate_timeline: '++id, candidateId, timestamp, event',
@@ -12,7 +11,6 @@ db.version(1).stores({
   assessment_responses: '++id, assessmentId, candidateId, submittedAt'
 });
 
-// Version 2 also on one line
 db.version(2).stores({
   jobs: 'id, title, description, slug, status, order, *tags'
   // Other tables are carried over automatically

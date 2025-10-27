@@ -24,33 +24,20 @@ const handleResponse = async (response) => {
 export const api = {
   // === JOBS ===
   jobs: {
-    /**
-     * GET /jobs
-     * Fetches jobs with filters and pagination.
-     */
     async getAll({ page = 1, pageSize = 10, status = '', search = '', sort = 'order', tags = [] }={}) {
       const params = new URLSearchParams({ page, pageSize, status, search, sort });
       
-      // --- ADDED: Handle tags array ---
       if (tags && tags.length > 0) {
-        // Send as a comma-separated list, e.g., tags=react,node
         params.append('tags', tags.join(','));
       }
-      // --- End of change ---
 
       const response = await fetch(`/jobs?${params}`);
       return handleResponse(response);
     },
-
-    /**
-     * GET /jobs/:id
-     * Fetches a single job by its ID.
-     */
     async getById(id) {
       const response = await fetch(`/jobs/${id}`);
       return handleResponse(response);
     },
-
     getJobCount: async () => {
       try {
         const total = await db.jobs.count(); 
@@ -60,7 +47,27 @@ export const api = {
         throw err;
       }
     },
-
+    getTitles: async () => {
+      try {
+        const response = await fetch('/jobs/titles');
+        return handleResponse(response);
+      } catch (err) {
+        console.error("Failed to get job titles:", err);
+        throw err;
+      }
+    },
+    getActiveJobCount: async () => {
+      try {
+        const allJobs = await db.jobs.toArray();
+        const activeJobs = allJobs.filter((job)=> {
+          return job.status === "active"
+        })
+        return activeJobs.length;
+      } catch (err) {
+        console.error("Failed to get active job count:", err);
+        throw err;
+      }
+    },
     getUniqueTags: async () => {
       try {
         const response = await fetch('/jobs/tags');
@@ -70,11 +77,6 @@ export const api = {
         throw err;
       }
     },
-
-    /**
-     * POST /jobs
-     * Creates a new job.
-     */
     async create(jobData) {
       const response = await fetch('/jobs', {
         method: 'POST',
@@ -83,11 +85,6 @@ export const api = {
       });
       return handleResponse(response);
     },
-    
-    /**
-     * PATCH /jobs/:id
-     * Updates an existing job.
-     */
     async update(id, updates) {
       const response = await fetch(`/jobs/${id}`, {
         method: 'PATCH',
@@ -96,11 +93,6 @@ export const api = {
       });
       return handleResponse(response);
     },
-    
-    /**
-     * PATCH /jobs/:id/reorder
-     * Reorders a job.
-     */
     async reorder({ jobId, fromOrder, toOrder }) {
       const response = await fetch(`/jobs/${jobId}/reorder`, {
         method: 'PATCH',
@@ -113,7 +105,10 @@ export const api = {
   
   // === CANDIDATES (Phase 3) ===
   candidates: {
-    // Placeholder for Phase 3
+    getAllCandidates: async () => {
+      const response = await fetch('/candidates');
+      return handleResponse(response);
+    },
     getCandidateCount: async () => {
       try {
         const total = await db.candidates.count(); 
@@ -123,6 +118,27 @@ export const api = {
         throw err;
       }
     },
+    getByJobId: async (jobId) => {
+      if (!jobId) {
+        throw new Error('Job ID is required to fetch candidates.');
+      }
+      const response = await fetch(`/candidates/job/${jobId}`);
+      return handleResponse(response);
+    },
+
+    
+    updateStage: async (candidateId, newStage) => {
+      if (!candidateId || !newStage) {
+        throw new Error('Candidate ID and new stage are required.');
+      }
+      const response = await fetch(`/candidates/${candidateId}/stage`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage: newStage }),
+      });
+      return handleResponse(response);
+    },
+    
   },
   
   // === ASSESSMENTS (Phase 3) ===
@@ -130,4 +146,3 @@ export const api = {
     // Placeholder for Phase 3
   },
 };
-

@@ -1,13 +1,9 @@
-/* --- Jobs Page Styles --- 
-  This file assumes the root variables from navigation.css are available.
-  For this to work in a real app, you'd import navigation.css (or a
-  global variables file) before this one.
-*/
+
 
 .jobs-page-main {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1.5rem 1rem; /* p-6 md:p-8 */
+  padding: 1.5rem 1rem; 
   background-color: var(--color-gray-50, #f9fafb);
   min-height: calc(100vh - 4rem); /* Full height minus navbar */
 }
@@ -22,7 +18,7 @@
 }
 
 .jobs-header h1 {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 1.875rem; 
   font-weight: 700;
   color: var(--color-gray-900, #111827);
   margin: 0 0 1rem 0;
@@ -41,7 +37,7 @@
 
 .search-bar input {
   width: 100%;
-  padding: 0.625rem 0.75rem 0.625rem 2.5rem; /* pl-10 */
+  padding: 0.625rem 0.75rem 0.625rem 2.5rem; 
   border: 1px solid var(--color-gray-200, #e5e7eb);
   border-radius: 0.375rem; /* rounded-md */
   font-size: 0.875rem;
@@ -116,7 +112,7 @@
 }
 
 .stat-card-value {
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.5rem; 
   font-weight: 700;
   color: var(--color-gray-900, #111827);
   margin: 0;
@@ -177,7 +173,7 @@
 
 .job-card-body {
   margin-bottom: 1rem;
-  padding-left: 2.25rem; /* Align with title (handle + gap) */
+  padding-left: 2.25rem; 
 }
 
 .job-tags {
@@ -192,7 +188,7 @@
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 0.25rem; /* rounded-sm */
+  border-radius: 0.25rem; 
   background-color: var(--color-gray-100, #f3f4f6);
   color: var(--color-gray-600, #4b5563);
 }
@@ -294,7 +290,7 @@
 
 .filter-dropdown-menu {
   position: absolute;
-  top: 110%; /* Position it just below the button */
+  top: 110%; 
   left: 0;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -304,7 +300,7 @@
   margin: 0;
   list-style: none;
   z-index: 10;
-  min-width: 150px; /* Give it some width */
+  min-width: 150px; 
 }
 
 .filter-dropdown-menu li {
@@ -328,18 +324,18 @@
   align-items: center;
   justify-content: center;
   cursor: grab;
-  color: #9ca3af; /* Light gray, adjust as needed */
-  margin-right: 8px; /* Space between handle and title */
+  color: #9ca3af; 
+  margin-right: 8px; 
 }
 
 .drag-handle-btn:focus-visible {
-  outline: 2px solid blue; /* Accessibility focus ring */
+  outline: 2px solid blue;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 .drag-handle-btn:hover {
-  color: #111827; /* Darker gray on hover */
+  color: #111827; 
 }
 
 /* --- Dragging State --- */
@@ -352,7 +348,7 @@
 }
 
 .job-card-drag-handle {
-  width: 20px; /* Slightly smaller */
+  width: 20px; 
   height: 20px;
 }
 
@@ -411,9 +407,7 @@
   height: 16px;
 }
 
-/* ============================================= */
-/* Job Details Page
-/* ============================================= */
+/* Job Details Page */
 
 .job-details-status {
   padding: 40px;
@@ -576,27 +570,22 @@
 
 .job-details-info-list li span {
   color: #111827;
-  word-break: break-all; /* For long IDs or slugs */
+  word-break: break-all; 
 }
 
-/* Re-using job-tags styles from job card */
 .job-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-/* This renders the description text */
 .job-details-description {
   font-size: 1rem;
   line-height: 1.6;
-  color: #374151; /* Medium gray text */
-  /* This is the magic property! */
-  /* It respects newlines and whitespace. */
+  color: #374151;
   white-space: pre-wrap;
 }
 
-/* This is the placeholder text you already had */
 .job-details-description-placeholder {
   font-style: italic;
   color: #6b7280;

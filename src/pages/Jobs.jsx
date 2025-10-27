@@ -1,16 +1,13 @@
-// src/pages/Jobs.jsx
-
 import React, { createContext, useState, useEffect } from 'react';
 import { Outlet, useOutlet } from 'react-router-dom';
 import NavigationBar from '../components/NavigationBar';
-import StatCards from '../components/StatCards';
 import JobList from '../components/JobList';
 import JobHeader from '../components/JobHeader';
 import Pagination from '../components/Pagination';
-import JobModal from '../components/JobModal'; // <-- 1. Import JobModal
+import JobModal from '../components/JobModal'; 
 import { api } from '../api';
 import '../styles/jobs.css';
-import '../styles/modal.css'; // <-- 2. Import modal CSS
+import '../styles/modal.css'; 
 import {
   DndContext,
   closestCorners,
@@ -20,10 +17,10 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
+import JobStatCard from '../components/JobStatCard';
 
 export const JobContext = createContext(null);
 
-// ... (useDebounce hook remains the same) ...
 function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
@@ -56,16 +53,14 @@ export default function Jobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalJobs, setTotalJobs] = useState(0);
 
-  // --- 3. Add state for modal and re-fetching ---
+  // Add state for modal and re-fetching ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null); // null = new job, object = editing job
   const [refreshKey, setRefreshKey] = useState(0); // Used to trigger a re-fetch
-  // --- End new state ---
 
-  // --- 1. ADD STATE FOR COUNTS HERE ---
+  // ADD STATE FOR COUNTS HERE 
   const [jobCount, setJobCount] = useState(0);
-  const [candidateCount, setCandidateCount] = useState(0);
-  // --- END ---
+  const [activeCount, setActiveCount] = useState(0);
 
   const debouncedSearch = useDebounce(searchTitle, 300);
 
@@ -87,7 +82,7 @@ export default function Jobs() {
     setCurrentPage(1);
   }, [debouncedSearch, statusFilter, selectedTags]);
 
-  // --- 4. MODIFIED Effect: Fetch data when filters, page, OR refreshKey changes ---
+  // Fetch data when filters, page, OR refreshKey changes 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -115,36 +110,33 @@ export default function Jobs() {
     };
 
     fetchJobs();
-  }, [debouncedSearch, statusFilter, selectedTags, currentPage, refreshKey]); // <-- Add refreshKey
+  }, [debouncedSearch, statusFilter, selectedTags, currentPage, refreshKey]); 
 
-  // ... (sensors remain the same) ...
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor)
   );
 
-  // --- 2. ADD A NEW useEffect TO FETCH COUNTS ---
+  // ADD A NEW useEffect TO FETCH COUNTS ---
   useEffect(() => {
-    const fetchCounts = async () => {
+    const fetchJobCount = async () => {
       try {
         // Fetch both counts in parallel
-        const [jCount, cCount] = await Promise.all([
+        const [jCount, ajCount] = await Promise.all([
           api.jobs.getJobCount(),
-          api.candidates.getCandidateCount(),
+          api.jobs.getActiveJobCount()
         ]);
         setJobCount(jCount);
-        setCandidateCount(cCount);
+        setActiveCount(ajCount);
       } catch (err) {
         console.error('Failed to fetch stat counts:', err);
       }
     };
 
-    fetchCounts();
-  }, [refreshKey]); // <-- This effect now runs on mount AND when a job is saved
-  // --- END ---
+    fetchJobCount();
+  }, [refreshKey]); 
 
-  // --- 5. MODIFIED handleDragEnd ---
-  // Add re-fetch on success
+  // handleDragEnd ---
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -172,7 +164,7 @@ export default function Jobs() {
         toOrder: targetJob.order,
       })
       .then(() => {
-        // --- Trigger re-fetch on success ---
+        // Trigger re-fetch on success ---
         setRefreshKey((k) => k + 1);
       })
       .catch((err) => {
@@ -181,7 +173,7 @@ export default function Jobs() {
       });
   };
 
-  // --- 6. Add handler functions for the modal ---
+  // Add handler functions for the modal ---
   const handleOpenAddModal = () => {
     setEditingJob(null);
     setIsModalOpen(true);
@@ -210,9 +202,8 @@ export default function Jobs() {
     // Trigger a re-fetch of jobs and tags
     setRefreshKey((k) => k + 1);
   };
-  // --- End handler functions ---
 
-  // --- 7. Define the value to be passed to the context ---
+  // Define the value to be passed to the context ---
   const contextValue = {
     jobs,
     loading,
@@ -224,7 +215,6 @@ export default function Jobs() {
     allTags,
     selectedTags,
     setSelectedTags,
-    // --- Pass modal handlers to context ---
     handleOpenAddModal,
     handleOpenEditModal,
   };
@@ -238,9 +228,7 @@ export default function Jobs() {
         ) : (
           <>
             <JobHeader />
-{/* --- 3. PASS COUNTS AS PROPS --- */}
-            <StatCards jobCount={jobCount} candidateCount={candidateCount} />
-            {/* --- END --- */}
+            <JobStatCard jobCount={jobCount} activeCount={activeCount} />
             <DndContext
               sensors={sensors}
               collisionDetection={closestCorners}
@@ -259,7 +247,7 @@ export default function Jobs() {
         )}
       </main>
 
-      {/* --- 8. Render the Modal component --- */}
+      {/*  Render the Modal component --- */}
       <JobModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

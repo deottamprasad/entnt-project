@@ -1,10 +1,8 @@
-// src/components/JobHeader.jsx
-
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { JobContext } from '../pages/Jobs';
 import '../styles/jobs.css';
 
-// ... (All Icon components remain the same) ...
+// All Icon components ...
 const SearchIcon = () => (
   <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
     <path d="M17.5 17.5L13.875 13.875M15.8333 9.16667C15.8333 12.8486 12.8486 15.8333 9.16667 15.8333C5.48477 15.8333 2.5 12.8486 2.5 9.16667C2.5 5.48477 5.48477 2.5 9.16667 2.5C12.8486 2.5 15.8333 5.48477 15.8333 9.16667Z" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -27,7 +25,7 @@ const XMarkIcon = () => (
 );
 
 
-// ... (TagsFilterDropdown component remains the same) ...
+// TagsFilterDropdown component
 const TagsFilterDropdown = () => {
   const { allTags, selectedTags, setSelectedTags } = useContext(JobContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +91,7 @@ const TagsFilterDropdown = () => {
 };
 
 
-// ... (StatusFilterDropdown component remains the same) ...
+// StatusFilterDropdown component
 const StatusFilterDropdown = () => {
   const { statusFilter, setStatusFilter } = useContext(JobContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -166,7 +164,6 @@ export default function JobHeader() {
 
           <TagsFilterDropdown />
 
-          {/* 2. Add onClick handler to the button */}
           <button
             type="button"
             className="add-job-btn"

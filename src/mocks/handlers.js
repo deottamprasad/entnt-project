@@ -22,9 +22,7 @@ const simulateWriteError = (failureRate = 0.07) => {
 // --- API Handlers ---
 
 export const handlers = [
-  // =============================================
   // JOBS API
-  // =============================================
 
   /**
    * GET /jobs
@@ -44,10 +42,10 @@ http.get('/jobs', async ({ request }) => {
       
     const tagList = tags ? tags.split(',') : [];
 
-    // 1. Start with the table and apply the primary sort
+    // Start with the table and apply the primary sort
     let collection = db.jobs.orderBy('order');
 
-    // 2. Apply filters
+    // Apply filters
     let filteredCollection = collection;
     if (status) {
       filteredCollection = filteredCollection.filter(job => 
@@ -65,16 +63,16 @@ http.get('/jobs', async ({ request }) => {
       );
     }
 
-    // 3. Get total count *after* all filtering
+    // Get total count *after* all filtering
     const total = await filteredCollection.count();
 
-    // 4. Apply pagination
-    const paginatedJobs = await filteredCollection // <-- Renamed from 'jobs'
+    // Apply pagination
+    const paginatedJobs = await filteredCollection 
       .offset((page - 1) * pageSize)
       .limit(pageSize)
       .toArray();
 
-    // --- 5. MODIFICATION: Enrich jobs with candidate counts ---
+    // Enrich jobs with candidate counts 
     // We do this *after* pagination for better performance.
     const jobsWithCounts = await Promise.all(
       paginatedJobs.map(async (job) => {
@@ -91,9 +89,8 @@ http.get('/jobs', async ({ request }) => {
         };
       })
     );
-    // --- End of modification ---
 
-    // 6. Return the enriched jobs
+    // Return the enriched jobs
     return HttpResponse.json({ 
       jobs: jobsWithCounts, // <-- Send the enriched array
       total, 
@@ -101,6 +98,22 @@ http.get('/jobs', async ({ request }) => {
       pageSize 
     });
   }),
+
+  http.get('/jobs/titles', async () => {
+    await simulateDelay(300); // Faster delay for UI elements
+    try {
+      const activeJobs = await db.jobs
+        .orderBy('title')
+        .toArray();
+      // Map to a simple { id, title } array
+      const titles = activeJobs.map(job => ({ id: job.id, title: job.title }));
+      
+      return HttpResponse.json(titles);
+    } catch (error) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to fetch job titles' }), { status: 500 });
+    }
+  }),
+
 http.get('/jobs/tags', async () => {
     await simulateDelay();
     try {
@@ -181,11 +194,6 @@ http.get('/jobs/tags', async () => {
    */
   http.patch('/jobs/:id/reorder', async ({ request, params }) => {
     await simulateDelay();
-    // This endpoint is required to fail occasionally
-    // if (simulateWriteError(0.1)) {
-    //   return new HttpResponse(JSON.stringify({ message: 'Failed to reorder' }), { status: 500 });
-    // }
-
     const { id } = params;
     const { fromOrder, toOrder } = await request.json();
 
@@ -220,19 +228,95 @@ http.get('/jobs/tags', async () => {
     }
   }),
 
-  // =============================================
   // CANDIDATES API (Stubs)
-  // =============================================
 
   http.get('/candidates', async () => {
     await simulateDelay();
-    const candidates = await db.candidates.limit(50).toArray(); // Return first 50
-    return HttpResponse.json({ candidates, total: 1000 });
+    
+    // Get all jobs and create a title map { jobId: jobTitle }
+    const allJobs = await db.jobs.toArray();
+    const jobMap = new Map();
+    allJobs.forEach(job => {
+      jobMap.set(job.id, job.title);
+    });
+
+    // Get all candidates
+    const candidates = await db.candidates.toArray(); 
+
+    // Enrich candidates with jobTitle
+    const enrichedCandidates = candidates.map(candidate => ({
+      ...candidate,
+      jobTitle: jobMap.get(candidate.jobId) || 'Unknown Job' // Add jobTitle
+    }));
+
+    // Return the new enriched list
+    return HttpResponse.json({ candidates: enrichedCandidates, total: enrichedCandidates.length });
   }),
   
   http.post('/candidates', async () => {
     await simulateDelay();
     return HttpResponse.json({ success: true }, { status: 201 });
+  }),
+
+  /**
+   * GET /candidates/job/:jobId
+   * Fetches all candidates for a specific job.
+   */
+  http.get('/candidates/job/:jobId', async ({ params }) => {
+    await simulateDelay();
+    const { jobId } = params;
+
+    if (!jobId) {
+      return new HttpResponse(JSON.stringify({ message: 'Job ID is required' }), { status: 400 });
+    }
+
+    try {
+      // Find all candidates matching the jobId
+      const candidates = await db.candidates
+        .where('jobId')
+        .equals(jobId)
+        .toArray();
+      
+      return HttpResponse.json({ candidates, total: candidates.length });
+    } catch (error) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to fetch candidates' }), { status: 500 });
+    }
+  }),
+
+  /**
+   * PATCH /candidates/:id/stage
+   * Updates a candidate's stage.
+   */
+  http.patch('/candidates/:id/stage', async ({ request, params }) => {
+    await simulateDelay(300);
+    if (simulateWriteError(0.05)) { // 5% chance of failure
+      return new HttpResponse(JSON.stringify({ message: 'Server error, please try again.' }), { status: 500 });
+    }
+
+    const { id } = params;
+    const { stage } = await request.json();
+
+    if (!stage) {
+      return new HttpResponse(JSON.stringify({ message: 'Stage is required' }), { status: 400 });
+    }
+
+    try {
+      await db.candidates.update(id, { stage });
+      
+      // Also add a timeline event
+      await db.candidate_timeline.add({
+        candidateId: id,
+        timestamp: new Date(),
+        event: `Stage moved to ${stage}`
+      });
+      
+      // Return the updated candidate
+      const updatedCandidate = await db.candidates.get(id);
+      return HttpResponse.json(updatedCandidate);
+
+    } catch (error) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to update candidate' }), { status: 500 });
+    }
   }),
 
   http.patch('/candidates/:id', async ({ params }) => {
@@ -254,9 +338,7 @@ http.get('/jobs/tags', async () => {
     return HttpResponse.json(events);
   }),
 
-  // =============================================
   // ASSESSMENTS API (Stubs)
-  // =============================================
   
   http.get('/assessments/:jobId', async ({ params }) => {
     await simulateDelay();
@@ -281,12 +363,11 @@ http.get('/jobs/tags', async () => {
     if (simulateWriteError()) {
       return new HttpResponse(null, { status: 500 });
     }
-    // In a real app, you'd get candidateId from auth
     await db.assessment_responses.add({
       assessmentId: params.jobId,
       candidateId: 'mock-candidate-id',
       submittedAt: new Date(),
-      responses: {}, // Mock responses
+      responses: {}, 
     });
     return HttpResponse.json({ success: true });
   }),
