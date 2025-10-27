@@ -30,7 +30,7 @@ export const handlers = [
    * GET /jobs
    * Supports pagination, filtering (status, search), and sorting (by order).
    */
- http.get('/jobs', async ({ request }) => {
+http.get('/jobs', async ({ request }) => {
     await simulateDelay();
     const url = new URL(request.url);
     const params = url.searchParams;
@@ -44,49 +44,63 @@ export const handlers = [
       
     const tagList = tags ? tags.split(',') : [];
 
-    // --- FIX IS HERE ---
-    
     // 1. Start with the table and apply the primary sort
-    // This ensures drag-and-drop order is *always* respected.
     let collection = db.jobs.orderBy('order');
 
     // 2. Apply filters
-    // We use Dexie's .filter() for simplicity, which works on top
-    // of the sorted collection.
-    
     let filteredCollection = collection;
-
     if (status) {
       filteredCollection = filteredCollection.filter(job => 
         job.status.toLowerCase() === status.toLowerCase()
       );
     }
-    
     if (search) {
       filteredCollection = filteredCollection.filter(job => 
         job.title.toLowerCase().includes(search.toLowerCase())
       );
     }
-
     if (tagList.length > 0) {
       filteredCollection = filteredCollection.filter(job => 
         tagList.every(tag => job.tags.includes(tag))
       );
     }
-    // --- END OF FIX ---
 
     // 3. Get total count *after* all filtering
     const total = await filteredCollection.count();
 
-    // 4. Apply pagination *last*
-    const jobs = await filteredCollection
+    // 4. Apply pagination
+    const paginatedJobs = await filteredCollection // <-- Renamed from 'jobs'
       .offset((page - 1) * pageSize)
       .limit(pageSize)
       .toArray();
 
-    return HttpResponse.json({ jobs, total, page, pageSize });
-  }),
+    // --- 5. MODIFICATION: Enrich jobs with candidate counts ---
+    // We do this *after* pagination for better performance.
+    const jobsWithCounts = await Promise.all(
+      paginatedJobs.map(async (job) => {
+        // Find the count of candidates for this specific job
+        const candidateCount = await db.candidates
+          .where('jobId')
+          .equals(job.id)
+          .count();
+        
+        // Return the job object with the new 'candidates' property
+        return {
+          ...job,
+          candidates: candidateCount,
+        };
+      })
+    );
+    // --- End of modification ---
 
+    // 6. Return the enriched jobs
+    return HttpResponse.json({ 
+      jobs: jobsWithCounts, // <-- Send the enriched array
+      total, 
+      page, 
+      pageSize 
+    });
+  }),
 http.get('/jobs/tags', async () => {
     await simulateDelay();
     try {

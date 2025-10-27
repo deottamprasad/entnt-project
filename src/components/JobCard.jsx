@@ -1,3 +1,5 @@
+// src/components/JobCard.jsx
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 // --- DND Imports ---
@@ -24,7 +26,8 @@ const DragHandleIcon = () => (
   </svg>
 );
 
-export default function JobCard({ job }) {
+// 1. Accept `onEdit` as a prop
+export default function JobCard({ job, onEdit }) {
   // --- DND: Use the hook ---
   const {
     attributes,
@@ -45,13 +48,11 @@ export default function JobCard({ job }) {
   const cardClasses = `job-card ${isDragging ? 'dragging' : ''}`;
 
   return (
-    // 1. Apply setNodeRef, style, and className to the main wrapper
+    // Apply setNodeRef, style, and className to the main wrapper
     <div ref={setNodeRef} style={style} className={cardClasses}>
       <div className="job-card-header">
         <div className="job-card-title-group">
-          {/* 2. Apply listeners and attributes to the handle.
-            Wrapping in a button is best practice for accessibility.
-          */}
+          {/* Apply listeners and attributes to the handle */}
           <button
             type="button"
             className="drag-handle-btn"
@@ -80,7 +81,10 @@ export default function JobCard({ job }) {
         <Link to={`${job.id}`} className="job-action-btn">
           View
         </Link>
-        <button className="job-action-btn">Edit</button>
+        {/* 2. Add onClick handler to the Edit button */}
+        <button type="button" className="job-action-btn" onClick={onEdit}>
+          Edit
+        </button>
       </div>
     </div>
   );

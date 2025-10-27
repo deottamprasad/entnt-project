@@ -1,3 +1,5 @@
+// src/components/JobList.jsx
+
 import React, { useContext } from 'react';
 import JobCard from './JobCard';
 import { JobContext } from '../pages/Jobs';
@@ -9,8 +11,8 @@ import {
 // --- End DND Imports ---
 
 export default function JobList() {
-  // 1. Consume the context
-  const { jobs, loading, error } = useContext(JobContext);
+  // 1. Consume the context, including the edit handler
+  const { jobs, loading, error, handleOpenEditModal } = useContext(JobContext);
 
   // 2. Loading and error states
   if (loading) {
@@ -33,7 +35,12 @@ export default function JobList() {
     >
       <div className="job-list">
         {jobs.map((job) => (
-          <JobCard key={job.id} job={job} />
+          // 4. Pass the onEdit prop to JobCard
+          <JobCard
+            key={job.id}
+            job={job}
+            onEdit={() => handleOpenEditModal(job)}
+          />
         ))}
       </div>
     </SortableContext>

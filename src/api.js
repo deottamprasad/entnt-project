@@ -42,6 +42,15 @@ export const api = {
       return handleResponse(response);
     },
 
+    /**
+     * GET /jobs/:id
+     * Fetches a single job by its ID.
+     */
+    async getById(id) {
+      const response = await fetch(`/jobs/${id}`);
+      return handleResponse(response);
+    },
+
     getJobCount: async () => {
       try {
         const total = await db.jobs.count(); 

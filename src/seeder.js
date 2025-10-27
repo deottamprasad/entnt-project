@@ -23,6 +23,33 @@ const CANDIDATE_STAGES = [
   'applied', 'screen', 'tech', 'offer', 'hired', 'rejected'
 ];
 
+const MOCK_DESCRIPTIONS = [
+  `We are seeking a passionate ${getRandomItem(MOCK_JOB_TITLES)} to join our dynamic team.
+  
+Key Responsibilities:
+- Design and implement scalable, high-performance applications.
+- Collaborate with cross-functional teams to define and ship new features.
+- Write clean, maintainable, and well-tested code.
+
+Qualifications:
+- 3+ years of experience in a similar role.
+- Proficiency in ${getRandomItem(MOCK_TAGS)} and ${getRandomItem(MOCK_TAGS)}.
+- Strong problem-solving skills.`,
+  
+  `This is a fantastic opportunity for a mid-level developer looking to take the next step in their career.
+You will be responsible for the entire product lifecycle, from concept to deployment.
+
+We value teamwork, innovation, and a commitment to quality.`,
+  
+  `Join our fast-growing startup! We're looking for a self-starter who is comfortable in a fast-paced environment.
+This role is 100% remote.
+
+Requirements:
+- Proven experience with ${getRandomItem(MOCK_TAGS)}.
+- Excellent communication skills.
+- A portfolio of past projects is highly desirable.`
+];
+
 // --- Helper Functions ---
 
 function getRandomItem(arr) {
@@ -47,16 +74,40 @@ function createSlug(title) {
  * Seeds the database with mock data.
  * Checks if data already exists to prevent re-seeding.
  */
+
 export async function seedDatabase() {
   try {
-    // Check if data already exists
-    const jobCount = await db.jobs.count();
-    if (jobCount > 0) {
+    /// --- FIX 1: Use a reliable check ---
+    // Get the very first job in the database, if one exists.
+    const anyFirstJob = await db.jobs.limit(1).first();
+
+    // Check if a job exists AND it has the 'description' field.
+    // This correctly identifies a new, seeded database.
+    if (anyFirstJob && anyFirstJob.description !== undefined) {
       console.log('Database (src/seeder.js) is already seeded.');
-      return; // Stop if data exists
+      return; // Stop. The database is correctly seeded.
     }
 
-    console.log('Database (src/seeder.js) is empty. Seeding data...');
+    // If we are here, we MUST re-seed.
+    // Either the DB is empty (anyFirstJob is undefined)
+    // or the schema is old (anyFirstJob exists, but description is undefined).
+
+    if (anyFirstJob) {
+      console.log('Old schema detected. Clearing ALL tables for re-seeding...');
+    } else {
+      console.log('Database (src/seeder.js) is empty. Seeding data...');
+    }
+
+    // --- FIX 2: Clear ALL tables ---
+    // This ensures we start fresh and don't duplicate candidates.
+    await Promise.all([
+      db.jobs.clear(),
+      db.candidates.clear(), // <-- This is the crucial fix for the count
+      db.candidate_timeline.clear(),
+      db.assessments.clear(),
+      db.assessment_responses.clear(),
+    ]);
+
 
     // 1. Generate Jobs
     const jobs = [];
@@ -67,11 +118,13 @@ export async function seedDatabase() {
         id: crypto.randomUUID(),
         title: uniqueTitle,
         slug: createSlug(uniqueTitle),
+        description: getRandomItem(MOCK_DESCRIPTIONS), // <-- ADD THIS LINE
         status: Math.random() > 0.3 ? 'active' : 'archived',
         tags: getRandomSubset(MOCK_TAGS, Math.ceil(Math.random() * 4)),
         order: i
       });
     }
+
     await db.jobs.bulkAdd(jobs);
     console.log('Seeded 25 jobs.');
 
@@ -169,8 +222,8 @@ export async function seedDatabase() {
 
 
     console.log('Database seeding complete.');
-
   } catch (error) {
     console.error('Error seeding database:', error);
   }
 }
+
