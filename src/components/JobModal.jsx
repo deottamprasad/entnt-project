@@ -24,6 +24,7 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState(''); // Storing tags as a comma-separated string
+  const [status, setStatus] = useState('active');
 
   // State for loading and errors within the modal
   const [isLoading, setIsLoading] = useState(false);
@@ -44,16 +45,17 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
         setTitle(job.title);
         setDescription(job.description || ''); // Handle undefined description
         setTags(job.tags.join(', '));
+        setStatus(job.status || 'active');
       } else {
         // We are adding: clear form
         setTitle('');
         setDescription('');
         setTags('');
+        setStatus('active'); 
       }
     }
   }, [isOpen, job, isEditing]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -69,6 +71,7 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
       title,
       description,
       tags: tagsArray,
+      status, // --- UPDATE THIS ---
     };
 
     try {
@@ -109,6 +112,24 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
                 required
               />
             </div>
+            
+            {/* --- ADD THIS ENTIRE BLOCK --- */}
+            {isEditing && (
+              <div className="form-group">
+                <label htmlFor="job-status">Status</label>
+                <select
+                  id="job-status"
+                  className="form-select" // Use a class for <select> if you have one
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <option value="active">Active</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+            )}
+            {/* --- END OF NEW BLOCK --- */}
+
             <div className="form-group">
               <label htmlFor="job-description">Description</label>
               <textarea

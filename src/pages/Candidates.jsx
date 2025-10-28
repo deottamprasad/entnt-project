@@ -15,7 +15,7 @@ import CandidateStatCard from '../components/CandidateStatCard';
 export const CandidateContext = createContext(null);
 
 export default function Candidates() {
-    const [isList, setIsList] = useState(false);
+    const [isList, setIsList] = useState(true);
     const [loadedPipeline, setLoadedPipeline] = useState(null);
     const outlet = useOutlet();
     const [candidateCount, setCandidateCount] = useState(0);

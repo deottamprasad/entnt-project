@@ -109,6 +109,14 @@ export const api = {
       const response = await fetch('/candidates');
       return handleResponse(response);
     },
+    getById: async (candidateId) => {
+      if (!candidateId) {
+        throw new Error('Candidate ID is required.');
+      }
+      const response = await fetch(`/candidates/${candidateId}`);
+      return handleResponse(response);
+    },
+
     getCandidateCount: async () => {
       try {
         const total = await db.candidates.count(); 
@@ -138,6 +146,35 @@ export const api = {
       });
       return handleResponse(response);
     },
+    getTimeline: async (candidateId) => {
+      if (!candidateId) {
+        throw new Error('Candidate ID is required.');
+      }
+      const response = await fetch(`/candidates/${candidateId}/timeline`);
+      return handleResponse(response);
+    },
+    
+    // --- ADD THIS FUNCTION ---
+    getNotes: async (candidateId) => {
+      if (!candidateId) {
+        throw new Error('Candidate ID is required.');
+      }
+      const response = await fetch(`/candidates/${candidateId}/notes`);
+      return handleResponse(response);
+    },
+
+    // --- ADD THIS FUNCTION ---
+    updateNotes: async (candidateId, content) => {
+      if (!candidateId) {
+        throw new Error('Candidate ID is required.');
+      }
+      const response = await fetch(`/candidates/${candidateId}/notes`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: content || '' }),
+      });
+      return handleResponse(response);
+    }
     
   },
   

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { CandidateContext } from '../pages/Candidates';
 import '../styles/candidates.css'; 
+import { Link } from 'react-router-dom';
 
 //Helper function to generate initials from a name.
 const getInitials = (name) => {
@@ -82,19 +83,20 @@ const CandidateListView = () => {
                             return (
                                 <tr key={candidate.id || candidate.email}>
                                     <td style={overflowCellStyle} title={candidate.name}>
-                                        <div className="candidate-info">
-                                            <div className="candidate-avatar">
-                                                <img 
-                                                    src={candidate.avatar || placeholderUrl} 
-                                                    alt={`${candidate.name} avatar`}
-                                                    onError={(e) => e.target.src = placeholderUrl} 
-                                                />
-                                            </div>
-                                            <div className="candidate-meta">
-                                                <div className="candidate-name">{candidate.name}</div>
-                                                <div className="candidate-email">{candidate.email}</div>
-                                            </div>
-                                        </div>
+                                        <Link 
+                                          to={`/mycandidate/${candidate.id}`} // <-- Use /mycandidate
+                                          className="candidate-info-link"
+                                        >
+                                          <div className="candidate-info">
+                                              <div className="candidate-avatar">
+                                                {/* ... (img) ... */}
+                                              </div>
+                                              <div className="candidate-meta">
+                                                  <div className="candidate-name">{candidate.name}</div>
+                                                  <div className="candidate-email">{candidate.email}</div>
+                                              </div>
+                                          </div>
+                                        </Link>
                                     </td>
                                     
                                     <td 

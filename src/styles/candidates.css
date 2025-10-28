@@ -594,3 +594,415 @@ body {
 .kanban-card:active {
     cursor: grabbing;
 }
+/* --- Link style for List View --- */
+.candidate-info-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.candidate-info-link:hover .candidate-name {
+  text-decoration: underline;
+  color: #2563eb; /* Or your app's primary color */
+}
+
+/* --- Detail Page Layout --- */
+.detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+.back-link:hover {
+  color: #1f2937;
+  text-decoration: underline;
+}
+
+/* --- Detail Header --- */
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+}
+.detail-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f3f4f6;
+}
+.detail-header-meta h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+.detail-header-meta p {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+.detail-header-tags {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.detail-header-tags span {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+/* --- Detail Grid --- */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Detail Card (Notes, Timeline) --- */
+.detail-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+.detail-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.detail-card-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+.detail-card-body {
+  padding: 1.5rem;
+}
+
+/* --- Notes Section Styles --- */
+.form-textarea {
+  width: 92%;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+.notes-display pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #374151;
+  margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.notes-placeholder {
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* --- Timeline Section Styles  --- */
+.timeline-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
+  /* Add padding to not cut off the dots */
+  padding-left: 0.5rem; 
+}
+
+.timeline-item {
+  position: relative;
+  /* Increased vertical spacing */
+  padding-bottom: 1.75rem; 
+  /* Make space for the new dot and line */
+  padding-left: 2rem;     
+  /* The vertical line */
+  border-left: 2px solid #e5e7eb; 
+}
+
+.timeline-item:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0.5rem; /* Give last item some breathing room */
+}
+
+/* This is the dot */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  /* Center the dot on the line */
+  left: -9px; 
+  /* Align with the top line of text */
+  top: 4px;   
+  width: 16px;  /* Make the dot bigger */
+  height: 16px; /* Make the dot bigger */
+  border-radius: 50%;
+  /* Give it a "punch-out" effect */
+  border: 4px solid #ffffff; 
+  background-color: #9ca3af; /* Default dot color */
+  box-sizing: border-box;
+}
+
+/* Make the most recent event's dot stand out */
+.timeline-item:first-child::before {
+  background-color: #2563eb; /* Use primary color */
+  border-color: #eff6ff; /* Lighter blue border */
+}
+
+.timeline-timestamp {
+  font-size: 0.875rem; /* A good readable size */
+  font-weight: 500;
+  color: #6b7280; /* Softer grey color */
+  margin-bottom: 0.375rem; /* Space between time and event */
+}
+
+.timeline-event {
+  font-size: 0.875rem;
+  color: #1f2937; /* Dark text for the event */
+  font-weight: 600; /* Make event text slightly bolder */
+  line-height: 1.4;
+}
+
+/* --- Button Styles --- */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+.btn-primary:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background-color: #ffffff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+.btn-secondary:hover {
+  background-color: #f9fafb;
+}
+.btn-secondary:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+.btn-icon {
+  background-color: transparent;
+  border-color: transparent;
+  color: #4b5563;
+}
+.btn-icon:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* In styles/candidates.css */
+
+/* --- Stage Progress Tracker Styles (Vertical) --- */
+.stage-tracker-vertical {
+  padding: 1rem 0.5rem;
+}
+
+.stage-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  /* This is the main vertical line */
+  border-left: 3px solid #e5e7eb; /* Light grey line */
+  margin-left: 10px; /* Make space for the dot */
+}
+
+/* This is the separated "Rejected" list */
+.rejected-list {
+  /* Use a neutral line color unless active */
+  border-left-color: #e5e7eb; 
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #e5e7eb;
+}
+.rejected-list .stage-item.rejected {
+  border-left-color: #ef4444; /* Red line */
+}
+
+
+.stage-item {
+  position: relative;
+  padding-left: 2rem; /* Space from the line */
+  padding-bottom: 1.5rem; 
+}
+.stage-item:last-child {
+  padding-bottom: 0.5rem;
+}
+
+/* This is the line segment for a completed item */
+.stage-item.completed::before {
+  content: '';
+  position: absolute;
+  left: -3px; /* On top of the main line */
+  top: 10px; /* Start below the dot */
+  
+  /* --- THIS IS THE FIX --- */
+  height: 100%; /* Draw all the way down */
+  /* --- END OF FIX --- */
+
+  width: 3px;
+  background-color: #22c55e; /* Green */
+  z-index: 1; /* Above main line, below dot */
+}
+
+/* This is the line segment for the current item */
+.stage-item.current::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 10px; /* Start below the dot */
+  height: 0; /* No line below the current dot */
+  width: 3px;
+  background-color: #22c55e; /* Green */
+  z-index: 1;
+}
+
+/* The dot for each stage */
+.stage-dot {
+  position: absolute;
+  left: -11.5px; /* (20px dot + 3px line) / 2 */
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* Pending color */
+  border: 4px solid #ffffff; /* Punch-out effect */
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  z-index: 2; /* On top of the line segments */
+}
+
+.stage-content {
+  position: relative;
+  top: -4px; /* Align text with dot */
+}
+
+.stage-label {
+  font-size: 1rem;
+  font-weight: 500; /* Use 500 for default */
+  color: #9ca3af; /* Faded color for PENDING */
+  transition: all 0.3s ease;
+}
+
+.stage-date {
+  font-size: 0.875rem;
+  color: #374151; /* Dark color for date */
+  font-weight: 500;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+/* --- Item States --- */
+
+/* A stage that is finished */
+.stage-item.completed .stage-dot {
+  background-color: #22c55e; /* Green dot */
+}
+.stage-item.completed .stage-label {
+  color: #1f2937; /* Dark text */
+  font-weight: 500; /* Make same weight as date */
+}
+
+/* The CURRENT, BLINKING stage */
+.stage-item.current .stage-dot {
+  background-color: #22c55e; /* Green dot */
+  animation: blinkAnimation 1.5s infinite ease-in-out;
+}
+.stage-item.current .stage-label {
+  color: #1f2937; /* Dark text */
+  font-weight: 700; /* BOLD */
+}
+
+/* Special case: Rejected */
+.stage-item.rejected .stage-dot {
+  background-color: #ef4444; /* Red dot */
+  animation-name: blink-red; /* Use red blink */
+}
+.stage-item.rejected .stage-label {
+  color: #ef4444; /* Red text */
+}
+/* Active rejected list has red line */
+.rejected-list .stage-item.rejected::before {
+  background-color: #ef4444;
+}
+
+
+/* A stage that is inactive (because of rejection) */
+.stage-item.inactive .stage-dot {
+  background-color: #e5e7eb;
+}
+.stage-item.inactive .stage-label {
+  color: #d1d5db; /* Even more faded */
+}
+
+/* --- The Blink Animation --- */
+@keyframes blinkAnimation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes blink-red { 0%, 100% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); } 50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.4); } }

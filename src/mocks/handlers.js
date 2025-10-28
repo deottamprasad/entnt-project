@@ -337,6 +337,71 @@ http.get('/jobs/tags', async () => {
     const events = await db.candidate_timeline.where('candidateId').equals(id).toArray();
     return HttpResponse.json(events);
   }),
+  /**
+   * GET /candidates/:id
+   * Fetches a single candidate and enriches it with jobTitle.
+   */
+  http.get('/candidates/:id', async ({ params }) => {
+    await simulateDelay();
+    const { id } = params;
+    
+    try {
+      const candidate = await db.candidates.get(id);
+      if (!candidate) {
+        return new HttpResponse(JSON.stringify({ message: 'Candidate not found' }), { status: 404 });
+      }
+
+      // Enrich with jobTitle
+      const job = await db.jobs.get(candidate.jobId);
+      const enrichedCandidate = {
+        ...candidate,
+        jobTitle: job ? job.title : 'Unknown Job'
+      };
+
+      return HttpResponse.json(enrichedCandidate);
+
+    } catch (error) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to fetch candidate' }), { status: 500 });
+    }
+  }),
+
+  /**
+   * GET /candidates/:id/notes
+   * Fetches the persisted notes for a candidate.
+   */
+  http.get('/candidates/:id/notes', async ({ params }) => {
+    await simulateDelay(200);
+    const { id } = params;
+    
+    // Use the new table 'candidate_notes'
+    const note = await db.candidate_notes.get(id); 
+    
+    if (note) {
+      return HttpResponse.json(note);
+    }
+    
+    // Return empty note object if one doesn't exist
+    return HttpResponse.json({ candidateId: id, content: '' });
+  }),
+
+  /**
+   * PUT /candidates/:id/notes
+   * Creates or updates the notes for a candidate.
+   */
+  http.put('/candidates/:id/notes', async ({ request, params }) => {
+    await simulateDelay(500);
+    if (simulateWriteError(0.05)) {
+      return new HttpResponse(JSON.stringify({ message: 'Failed to save notes' }), { status: 500 });
+    }
+    
+    const { id } = params;
+    const { content } = await request.json();
+    
+    // Use 'put' which creates or updates, using candidateId as the key
+    await db.candidate_notes.put({ candidateId: id, content });
+    
+    return HttpResponse.json({ success: true, candidateId: id, content });
+  }),
 
   // ASSESSMENTS API (Stubs)
   

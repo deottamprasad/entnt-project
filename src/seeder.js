@@ -106,6 +106,7 @@ export async function seedDatabase() {
       db.candidate_timeline.clear(),
       db.assessments.clear(),
       db.assessment_responses.clear(),
+      db.candidate_notes.clear(),
     ]);
 
 
@@ -201,24 +202,50 @@ export async function seedDatabase() {
     await db.assessments.bulkAdd(assessments);
     console.log('Seeded 3 assessments.');
     
+    /// In seeder.js
+
     // 4. Generate Timeline Events
+    console.log('Seeding timeline events...');
     const timelineEvents = [];
-    for(const candidate of candidates.slice(0, 50)) { // Add timeline for first 50 candidates
-        if (candidate.stage !== 'applied') {
+    
+    // Define the stage order
+    const STAGE_ORDER = ['applied', 'screen', 'tech', 'offer', 'hired'];
+
+    for(const candidate of candidates) {
+        if (candidate.stage === 'rejected') {
+            // Special case for rejected
             timelineEvents.push({
                 candidateId: candidate.id,
                 timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
-                event: `Candidate applied.`
+                event: `stage:applied` // Simple, clear event
             });
             timelineEvents.push({
                 candidateId: candidate.id,
                 timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 day ago
-                event: `Stage changed from 'applied' to '${candidate.stage}'.`
+                event: `stage:rejected` // Simple, clear event
             });
+        } else {
+            // Loop through the happy path
+            const currentStageIndex = STAGE_ORDER.indexOf(candidate.stage);
+            if (currentStageIndex === -1) continue; // Skip if stage isn't in our defined order
+
+            for (let i = 0; i <= currentStageIndex; i++) {
+                const stage = STAGE_ORDER[i];
+                // 1 day ago, 4 days ago, 7 days ago...
+                const daysAgo = (currentStageIndex - i) * 3 + 1; 
+                const eventTimestamp = new Date(Date.now() - 1000 * 60 * 60 * 24 * daysAgo);
+
+                timelineEvents.push({
+                    candidateId: candidate.id,
+                    timestamp: eventTimestamp,
+                    event: `stage:${stage}` // e.g., "stage:applied", "stage:screen"
+                });
+            }
         }
     }
+    
     await db.candidate_timeline.bulkAdd(timelineEvents);
-    console.log('Seeded timeline events.');
+    console.log(`Seeded ${timelineEvents.length} timeline events.`);
 
 
     console.log('Database seeding complete.');

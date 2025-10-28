@@ -590,3 +590,8 @@
   font-style: italic;
   color: #6b7280;
 }
+
+.job-status-badge.archived {
+  background-color: #f1f5f9; /* gray-100 */
+  color: #475569; /* gray-600 */
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import "../styles/candidates.css"
 
 // Accept 'filters' and 'setFilters' as props
 export default function CandidateListForm({ filters, setFilters }) {

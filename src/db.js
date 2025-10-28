@@ -16,5 +16,11 @@ db.version(2).stores({
   // Other tables are carried over automatically
 });
 
+db.version(3).stores({
+  // This version adds the candidate_notes table
+  // All other tables (jobs, candidates, etc.) are
+  // automatically carried over from version 2.
+  candidate_notes: 'candidateId, content' // Primary key is candidateId
+});
 
 console.log("Dexie database schema (src/db.js) initialized.");
