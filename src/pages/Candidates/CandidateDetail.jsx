@@ -1,12 +1,11 @@
-// In CandidateDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../../api';
 import { ArrowLeft, Edit, Save } from 'lucide-react';
-import '../../styles/candidates.css'; // Re-use existing styles
+import '../../styles/candidates.css'; 
 import StageProgressTracker from '../../components/StageProgressTracker';
 
-// Helper functions (copied from CandidateListView for consistency)
+// Helper functions 
 const getInitials = (name) => {
     if (!name) return '??';
     return name.split(' ')
@@ -31,7 +30,7 @@ const getStageColor = (stage) => {
 };
 
 export default function CandidateDetail() {
-  const { candidateId } = useParams(); // Use 'id' to match your App.js route
+  const { candidateId } = useParams(); 
   
   // State for data
   const [candidate, setCandidate] = useState(null);
@@ -78,7 +77,7 @@ export default function CandidateDetail() {
     setIsSaving(true);
     try {
       await api.candidates.updateNotes(candidateId, notesDraft);
-      setNotes(notesDraft); // Commit the draft
+      setNotes(notesDraft);
       setIsEditingNotes(false);
     } catch (err) {
       alert(`Failed to save notes: ${err.message}`);
@@ -88,7 +87,7 @@ export default function CandidateDetail() {
   };
 
   const handleCancelEdit = () => {
-    setNotesDraft(notes); // Revert changes
+    setNotesDraft(notes); 
     setIsEditingNotes(false);
   };
 
@@ -109,7 +108,7 @@ export default function CandidateDetail() {
 
   return (
     <div className="detail-container">
-      <Link to="/mycandidate" className="back-link"> {/* <-- UPDATED LINK */}
+      <Link to="/mycandidate" className="back-link"> 
         <ArrowLeft size={16} /> Back to All Candidates
       </Link>
 

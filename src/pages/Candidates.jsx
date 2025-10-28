@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import NavigationBar from '../components/NavigationBar';
-import { List, LayoutGrid, Users, UserPlus, Search } from 'lucide-react';
+import { List, LayoutGrid, Users, UserPlus } from 'lucide-react';
 import CandidateListForm from '../components/CandidateListForm';
 import CandidateListView from '../components/CandidateListView';
 import CandidateKanbanForm from '../components/CandidateKanbanForm';
@@ -22,7 +21,7 @@ export default function Candidates() {
     
     const [allCandidates, setAllCandidates] = useState([]);
     
-    // Add loading and error states ---
+    // loading and error states ---
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     

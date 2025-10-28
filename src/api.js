@@ -154,7 +154,6 @@ export const api = {
       return handleResponse(response);
     },
     
-    // --- ADD THIS FUNCTION ---
     getNotes: async (candidateId) => {
       if (!candidateId) {
         throw new Error('Candidate ID is required.');
@@ -163,7 +162,6 @@ export const api = {
       return handleResponse(response);
     },
 
-    // --- ADD THIS FUNCTION ---
     updateNotes: async (candidateId, content) => {
       if (!candidateId) {
         throw new Error('Candidate ID is required.');
@@ -180,6 +178,33 @@ export const api = {
   
   // === ASSESSMENTS (Phase 3) ===
   assessments: {
-    // Placeholder for Phase 3
+    /**
+     * Gets the assessment structure for a specific job.
+     * @param {string} jobId - The ID of the job.
+     */
+    async getById(jobId) {
+      if (!jobId) {
+        throw new Error('Job ID is required to fetch assessment.');
+      }
+      const response = await fetch(`/assessments/${jobId}`);
+      return handleResponse(response);
+    },
+
+    /**
+     * Updates/creates the assessment structure for a specific job.
+     *  jobId - The ID of the job.
+     *  structure - The new assessment structure object.
+     */
+    async update(jobId, structure) {
+      if (!jobId) {
+        throw new Error('Job ID is required to update assessment.');
+      }
+      const response = await fetch(`/assessments/${jobId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ structure }),
+      });
+      return handleResponse(response);
+    }
   },
 };

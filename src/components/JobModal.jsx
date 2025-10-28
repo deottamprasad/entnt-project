@@ -71,7 +71,7 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
       title,
       description,
       tags: tagsArray,
-      status, // --- UPDATE THIS ---
+      status,
     };
 
     try {
@@ -84,7 +84,6 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
     }
   };
 
-  // Don't render anything if not open
   if (!isOpen) {
     return null;
   }
@@ -113,13 +112,12 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
               />
             </div>
             
-            {/* --- ADD THIS ENTIRE BLOCK --- */}
             {isEditing && (
               <div className="form-group">
                 <label htmlFor="job-status">Status</label>
                 <select
                   id="job-status"
-                  className="form-select" // Use a class for <select> if you have one
+                  className="form-select" 
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
@@ -128,7 +126,6 @@ export default function JobModal({ isOpen, onClose, onSave, job }) {
                 </select>
               </div>
             )}
-            {/* --- END OF NEW BLOCK --- */}
 
             <div className="form-group">
               <label htmlFor="job-description">Description</label>

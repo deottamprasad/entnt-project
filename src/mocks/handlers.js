@@ -397,7 +397,6 @@ http.get('/jobs/tags', async () => {
     const { id } = params;
     const { content } = await request.json();
     
-    // Use 'put' which creates or updates, using candidateId as the key
     await db.candidate_notes.put({ candidateId: id, content });
     
     return HttpResponse.json({ success: true, candidateId: id, content });

@@ -1,5 +1,5 @@
 
-// Define all possible stages
+// All possible stages
 const ALL_STAGES = [
   { id: 'applied', label: 'Application' },
   { id: 'screen', label: 'Screen' },

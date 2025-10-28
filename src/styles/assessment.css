@@ -14,6 +14,7 @@
   padding: 24px;
 }
 
+/* --- Header --- */
 .assessment-header {
   display: flex;
   justify-content: space-between;
@@ -53,12 +54,14 @@
   cursor: not-allowed;
 }
 
+/* --- Builder --- */
 .assessment-builder {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 3fr 2fr; 
   gap: 24px;
 }
 
+/* --- Editor (Left Side) --- */
 .assessment-editor {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -73,7 +76,7 @@
   width: 100%;
   padding: 20px 24px;
   border-bottom: 1px solid #e0e0e0;
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
 .assessment-title-input:focus {
   outline: 2px solid #007bff;
@@ -128,6 +131,7 @@
   font-size: 0.9rem;
 }
 
+/* --- Buttons --- */
 .assessment-add-btn {
   display: flex;
   align-items: center;
@@ -171,10 +175,12 @@
   color: #aaa;
 }
 
+
+/* --- Preview (Right Side) --- */
 .assessment-preview {
-  position: sticky;
+  position: sticky; 
   top: 24px;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 48px); /* Full height minus padding */
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background: #fdfdfd;
@@ -191,11 +197,12 @@
 .assessment-preview-content {
   padding: 24px;
   overflow-y: auto;
-  max-height: calc(100% - 65px);
+  max-height: calc(100% - 65px); /* Full panel minus title height */
 }
 
+/* --- Question Editor Styles --- */
 .question-editor {
-  border: 1px solid #007bff;
+  border: 1px solid #007bff; /* Highlight active editor */
   background: #fdfdff;
   border-radius: 6px;
   margin-top: 12px;
@@ -237,6 +244,7 @@
   gap: 16px;
 }
 
+/* Form Group Styles */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -257,6 +265,7 @@
   box-sizing: border-box;
 }
 
+/* Checkbox Group */
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -272,13 +281,14 @@
   color: #000;
 }
 
+/* Inline Group (for min/max) */
 .form-group.inline {
   flex-direction: row;
   align-items: center;
   gap: 8px;
 }
 .form-group.inline label {
-  flex-shrink: 0;
+  flex-shrink: 0; /* Don't let label shrink */
 }
 .form-group.inline input {
   width: auto;
@@ -290,6 +300,7 @@
   gap: 12px;
 }
 
+/* Options Editor */
 .options-editor .option-input-group {
   display: flex;
   align-items: center;
@@ -302,12 +313,13 @@
 .assessment-add-btn.small {
   padding: 6px 10px;
   font-size: 0.9rem;
-  align-self: flex-start;
+  align-self: flex-start; 
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
+/* --- Make Stub Clickable --- */
 .assessment-question-stub {
   cursor: pointer;
   transition: background-color 0.2s;
@@ -317,6 +329,7 @@
   border-color: #007bff;
 }
 
+/* --- Live Preview Panel Styles --- */
 .preview-form {
   width: 100%;
 }
@@ -365,6 +378,7 @@
   padding: 10px;
 }
 
+/* --- Preview Form Elements --- */
 .preview-form input[type="text"][disabled],
 .preview-form input[type="number"][disabled],
 .preview-form input[type="file"][disabled],
@@ -375,7 +389,7 @@
   border-radius: 4px;
   background-color: #f4f4f4;
   cursor: not-allowed;
-  box-sizing: border-box;
+  box-sizing: border-box; 
   font-family: inherit;
 }
 .preview-form textarea[disabled] {
@@ -403,6 +417,7 @@
   word-wrap: break-word;
 }
 
+/* --- Live Preview Form Element --- */
 .preview-form input[type="text"],
 .preview-form input[type="number"],
 .preview-form input[type="file"],
@@ -431,7 +446,7 @@
 }
 
 .preview-error {
-  color: #d9534f;
+  color: #d9534f; 
   font-size: 0.85rem;
   font-weight: 500;
   margin-top: 6px;

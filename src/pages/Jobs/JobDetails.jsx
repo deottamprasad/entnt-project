@@ -1,9 +1,7 @@
-// src/pages/Jobs/JobDetails.jsx
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api';
-import '../../styles/jobs.css'; // Using the main jobs stylesheet
+import '../../styles/jobs.css'; 
 
 // --- Icons ---
 const ChevronLeftIcon = () => (
@@ -21,7 +19,7 @@ const PencilSquareIcon = () => (
 
 export default function JobDetails() {
   const { id } = useParams();
-  const navigate = useNavigate(); // Hook to navigate backwards
+  const navigate = useNavigate(); 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +38,6 @@ export default function JobDetails() {
       }
     };
 
-    // Only fetch if ID is present
     if (id) {
       fetchJob();
     }
@@ -126,7 +123,7 @@ export default function JobDetails() {
               )}
             </div>
           </div>
-        </div>
+        </div>   
       </div>
     </div>
   );

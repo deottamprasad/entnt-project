@@ -53,12 +53,12 @@ export default function Jobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalJobs, setTotalJobs] = useState(0);
 
-  // Add state for modal and re-fetching ---
+  // state for modal and re-fetching ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingJob, setEditingJob] = useState(null); // null = new job, object = editing job
-  const [refreshKey, setRefreshKey] = useState(0); // Used to trigger a re-fetch
+  const [editingJob, setEditingJob] = useState(null); 
+  const [refreshKey, setRefreshKey] = useState(0); 
 
-  // ADD STATE FOR COUNTS HERE 
+  // STATE FOR COUNTS  
   const [jobCount, setJobCount] = useState(0);
   const [activeCount, setActiveCount] = useState(0);
 
@@ -75,7 +75,7 @@ export default function Jobs() {
       }
     };
     fetchTags();
-  }, [refreshKey]); // <-- Refresh tags after a save
+  }, [refreshKey]); 
 
   // Effect: Reset page to 1 when filters change
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function Jobs() {
     useSensor(KeyboardSensor)
   );
 
-  // ADD A NEW useEffect TO FETCH COUNTS ---
+  // useEffect TO FETCH COUNTS ---
   useEffect(() => {
     const fetchJobCount = async () => {
       try {
@@ -173,7 +173,7 @@ export default function Jobs() {
       });
   };
 
-  // Add handler functions for the modal ---
+  // handler functions
   const handleOpenAddModal = () => {
     setEditingJob(null);
     setIsModalOpen(true);
