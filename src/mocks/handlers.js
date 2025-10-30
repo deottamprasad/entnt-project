@@ -230,8 +230,11 @@ http.get('/jobs/tags', async () => {
 
   // CANDIDATES API (Stubs)
 
-  http.get('/candidates', async () => {
+  http.get('/candidates', async ({ request }) => { 
     await simulateDelay();
+
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search');
     
     // Get all jobs and create a title map { jobId: jobTitle }
     const allJobs = await db.jobs.toArray();
@@ -241,8 +244,15 @@ http.get('/jobs/tags', async () => {
     });
 
     // Get all candidates
-    const candidates = await db.candidates.toArray(); 
+    let candidates = await db.candidates.toArray();
 
+    // Filter candidates if a search query is provided
+    if (search) {
+      candidates = candidates.filter(candidate => 
+        candidate.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
     // Enrich candidates with jobTitle
     const enrichedCandidates = candidates.map(candidate => ({
       ...candidate,
@@ -436,4 +446,3 @@ http.get('/jobs/tags', async () => {
     return HttpResponse.json({ success: true });
   }),
 ];
-

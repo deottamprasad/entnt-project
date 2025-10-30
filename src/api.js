@@ -105,10 +105,16 @@ export const api = {
   
   // === CANDIDATES (Phase 3) ===
   candidates: {
-    getAllCandidates: async () => {
-      const response = await fetch('/candidates');
+    getAllCandidates: async ({ search = '' } = {}) => { 
+      const params = new URLSearchParams(); 
+      if (search) { 
+        params.append('search', search); 
+      }
+      
+      const response = await fetch(`/candidates?${params}`); 
       return handleResponse(response);
     },
+    
     getById: async (candidateId) => {
       if (!candidateId) {
         throw new Error('Candidate ID is required.');
@@ -192,8 +198,8 @@ export const api = {
 
     /**
      * Updates/creates the assessment structure for a specific job.
-     *  jobId - The ID of the job.
-     *  structure - The new assessment structure object.
+     * jobId - The ID of the job.
+     * structure - The new assessment structure object.
      */
     async update(jobId, structure) {
       if (!jobId) {

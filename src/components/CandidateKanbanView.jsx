@@ -12,7 +12,7 @@ import KanbanColumn from './KanbanColumn.jsx';
 import KanbanCard from './KanbanCard.jsx';
 import '../styles/candidates.css'; 
 
-// Define the order of columns based on your stages
+// Order of columns based on our stages
 const KANBAN_STAGES = ['applied', 'screen', 'tech', 'offer', 'hired', 'rejected'];
 
 const CandidateKanbanView = ({ selectedJob }) => {
@@ -20,10 +20,10 @@ const CandidateKanbanView = ({ selectedJob }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
-    // Add state for the actively dragged card
+    // State for the actively dragged card
     const [activeCard, setActiveCard] = useState(null);
 
-    // Fetch candidates when the selectedJob prop changes (unchanged)
+    // Fetch candidates when the selectedJob prop changes 
     useEffect(() => {
         if (!selectedJob) {
             setCandidates([]);
@@ -93,7 +93,7 @@ const CandidateKanbanView = ({ selectedJob }) => {
         const oldStage = candidate.stage.toLowerCase();
 
         if (newStage === oldStage) {
-            return; // Dropped in the same column
+            return;
         }
 
         // --- Optimistic Update ---
@@ -164,7 +164,7 @@ const CandidateKanbanView = ({ selectedJob }) => {
                 </div>
             </div>
 
-            {/* Add DragOverlay for a smooth dragging animation */}
+            {/* DragOverlay for a smooth dragging animation */}
             <DragOverlay>
                 {activeCard ? (
                     <KanbanCard candidate={activeCard} />

@@ -475,6 +475,7 @@ body {
     font-weight: 600;
     color: #374151;
     text-transform: uppercase;
+    padding: 1rem;
 }
 .kanban-column-count {
     font-size: 0.75rem;
@@ -488,6 +489,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    padding-left: 1rem;  
+    padding-right: 1rem; 
+    padding-bottom: 1rem; 
 }
 
 .kanban-card {
@@ -792,6 +796,8 @@ body {
     background-color: #ffffff;
     color: #374151;
     border-color: #d1d5db;
+    height: 50%;
+    margin-top:1.5rem;
 }
 .btn-secondary:hover {
     background-color: #f9fafb;
@@ -950,6 +956,74 @@ body {
   color: var(--color-red-600);
 }
 
+/* --- STYLES for "From Scratch" Mentions --- */
+
+/* This is the hidden div we use to measure caret position.
+   It must be invisible and live off-screen.
+*/
+.notes-editor-mirror {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+  white-space: pre-wrap; /* Crucial for matching textarea line breaks */
+  word-wrap: break-word; /* Crucial for matching textarea line breaks */
+}
+
+/* This wrapper is crucial. 
+  It contains the textarea and the popup.
+*/
+.notes-editor-wrapper {
+  position: relative;
+  width: 92%; /* Match your .form-textarea width */
+}
+
+/* This is the popup box. We position it absolutely,
+  right underneath the textarea wrapper (top: 100%).
+*/
+.mentions-popup {
+  position: absolute;
+  
+  /* Theme-matching styles */
+  border: 1px solid var(--color-border-input);
+  background-color: var(--color-white);
+  border-radius: 0.375rem;
+  box-shadow: var(--shadow);
+  
+  /* Sizing and overflow */
+  margin-top: 0.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.mentions-popup ul {
+  padding: 0.25rem;
+  margin: 0;
+  list-style: none;
+}
+
+.mentions-popup li {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  font-family: var(--font-family-inter);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.mentions-popup li:hover {
+  background-color: var(--color-indigo-50);
+  color: var(--color-indigo-700);
+}
+
+.mentions-popup .popup-message {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
 
 @keyframes blinkAnimation {
     0% {
@@ -963,4 +1037,7 @@ body {
     }
 }
 
-@keyframes blink-red { 0%, 100% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); } 50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.4); } }
+@keyframes blink-red { 
+    0%, 100% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); } 
+    50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.4); } 
+}
