@@ -141,7 +141,7 @@ export default function Candidates() {
                         />
                     </div>
 
-                    <div>
+                    <div className="main-dashboard-content">
                         {isList ? (
                             <>
                                 <CandidateListForm 
