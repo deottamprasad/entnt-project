@@ -387,3 +387,8 @@ This section details known issues and complex challenges encountered during deve
     - **Implementation:** `Candidates.jsx` (the parent) fetches _all 1000+ candidates_ for the list view. When the user switches to Kanban, `CandidateKanbanView.jsx` fetches _only the candidates for that specific job_. This creates two separate "sources of truth" for candidate data.
 
     - **Challenge:** An update in one view (e.g., dragging a candidate in Kanban) does not automatically update the other. The main list in `Candidates.jsx` would only reflect this change upon a full page reload.
+
+## 8. Authors
+
+- **Deottam Prasad** – M.Tech CSE, IIT (ISM) Dhanbad  
+  [GitHub](https://github.com/deottamprasad) | [Email](mailto:deottamprasad@gmail.com)
